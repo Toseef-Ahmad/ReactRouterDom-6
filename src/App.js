@@ -7,6 +7,7 @@ import {
   Route,
   Navigate,
   Link,
+  NavLink,
   Outlet,
   useParams,
 } from 'react-router-dom';
@@ -20,7 +21,7 @@ export default function App() {
           <Route path="/app" element={<Navigate replace to="/learn" />} />
           <Route path="learn" element={<Learn />}>
             <Route path="courses" element={<Courses />}>
-              <Route path=":coursesId" element={<CourseId />} />
+              <Route path=":coursesId" element={<Courses />} />
             </Route>
             <Route path="bundles" element={<Bundles />} />
           </Route>
@@ -55,10 +56,20 @@ const Learn = () => {
 
 // Nesting
 const Courses = () => {
+  const arr = ['angular', 'vue', 'react'];
+  const currentParam = arr[Math.floor(Math.random() * arr.length)];
+  const { coursesId } = useParams();
   return (
     <div>
-      <h1>List of Courses</h1>
-      <p>I will tell you all about courses</p>
+      <NavLink to="/learn/courses/test">Test</NavLink>
+      <NavLink
+        style={({ isActive }) => {
+          return { backgroundColor: isActive ? 'black' : 'blue' };
+        }}
+        to={`/learn/courses/${currentParam}`}
+      >
+        {currentParam}
+      </NavLink>
       <Outlet />
     </div>
   );
@@ -74,7 +85,7 @@ const Bundles = () => {
 };
 
 const CourseId = () => {
-  const {coursesId}  = useParams();
+  const { coursesId } = useParams();
   return (
     <div>
       <h1>id: {coursesId}</h1>
